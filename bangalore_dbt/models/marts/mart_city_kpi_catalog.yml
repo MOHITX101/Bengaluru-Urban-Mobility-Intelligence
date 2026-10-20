@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: mart_city_kpi_catalog
+    description: >
+      Long-format catalogue of headline Bengaluru mobility, air-quality,
+      vehicle-registration, BMTC and road-safety indicators.
+
+    columns:
+      - name: display_order
+        data_tests:
+          - not_null
+          - unique
+
+      - name: kpi_category
+        data_tests:
+          - not_null
+
+      - name: kpi_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: kpi_name
+        data_tests:
+          - not_null
+
+      - name: metric_value
+        data_tests:
+          - not_null
+
+      - name: metric_unit
+        data_tests:
+          - not_null
+
+      - name: reporting_period
+        data_tests:
+          - not_null
+
+      - name: as_of_date
+        data_tests:
+          - not_null
+
+      - name: source_model
+        data_tests:
+          - not_null
+
+      - name: interpretation_note
+        data_tests:
+          - not_null

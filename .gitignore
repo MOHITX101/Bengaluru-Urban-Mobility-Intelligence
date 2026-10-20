@@ -1,0 +1,88 @@
+# --------------------------------------------------
+# Python environments
+# --------------------------------------------------
+.venv/
+.rag_venv/
+venv/
+env/
+
+# --------------------------------------------------
+# Python-generated files
+# --------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --------------------------------------------------
+# Secrets and credentials
+# --------------------------------------------------
+.env
+.env.*
+**/.env
+**/.env.*
+
+!.env.example
+!**/.env.example
+
+profiles.yml
+**/profiles.yml
+!profiles.example.yml
+!**/profiles.example.yml
+
+.streamlit/secrets.toml
+**/.streamlit/secrets.toml
+
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# --------------------------------------------------
+# dbt-generated files
+# --------------------------------------------------
+target/
+**/target/
+dbt_packages/
+**/dbt_packages/
+logs/
+**/logs/
+.user.yml
+
+# --------------------------------------------------
+# Application and runtime files
+# --------------------------------------------------
+*.log
+*.tmp
+*.temp
+.cache/
+.streamlit/cache/
+
+# --------------------------------------------------
+# Power BI temporary files
+# Keep the actual PBIX file
+# --------------------------------------------------
+~$*.pbix
+*.pbix.tmp
+
+# --------------------------------------------------
+# Editors and operating systems
+# --------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --------------------------------------------------
+# Local scratch and backup files
+# --------------------------------------------------
+*.bak
+*.backup
+*.swp
+*.swo

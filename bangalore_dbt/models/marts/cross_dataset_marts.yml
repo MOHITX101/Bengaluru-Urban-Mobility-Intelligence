@@ -1,0 +1,184 @@
+version: 2
+
+models:
+  - name: mart_air_quality_weather_daily
+    description: >
+      Station-day air-quality observations joined with daily Bengaluru
+      weather using the common observation date.
+
+    columns:
+      - name: station_day_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: station_id
+        data_tests:
+          - not_null
+
+      - name: observation_date_ist
+        data_tests:
+          - not_null
+
+      - name: weather_match_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - MATCHED
+                  - UNMATCHED
+
+      - name: rain_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Rainy
+                  - No rain
+                  - Weather unavailable
+
+  - name: mart_city_air_quality_weather_daily
+    description: >
+      City-level daily pollution and weather dataset created by aggregating
+      eligible air-quality monitoring stations to one row per date.
+
+    columns:
+      - name: city_weather_date_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: observation_date_ist
+        data_tests:
+          - not_null
+          - unique
+
+      - name: reporting_stations
+        data_tests:
+          - not_null
+
+      - name: rain_status
+        data_tests:
+          - not_null
+
+      - name: is_high_coverage_pm25_date
+        data_tests:
+          - not_null
+
+  - name: mart_weather_air_quality_summary
+    description: >
+      Precipitation-band pollution comparisons and weather-pollution
+      correlations calculated from high-coverage city dates.
+
+    columns:
+      - name: precipitation_band_order
+        data_tests:
+          - not_null
+          - unique
+
+      - name: precipitation_band
+        data_tests:
+          - not_null
+          - unique
+
+      - name: observed_dates
+        data_tests:
+          - not_null
+
+      - name: avg_city_pm25_ug_m3
+        data_tests:
+          - not_null
+
+      - name: avg_city_pm10_ug_m3
+        data_tests:
+          - not_null
+
+  - name: mart_public_transport_vehicle_pressure_yearly
+    description: >
+      Financial-year comparison of registered vehicle growth with BMTC
+      fleet, schedules and service supply.
+
+    columns:
+      - name: fiscal_year
+        data_tests:
+          - not_null
+          - unique
+
+      - name: fiscal_year_start
+        data_tests:
+          - not_null
+          - unique
+
+      - name: total_registered_vehicles
+        data_tests:
+          - not_null
+
+      - name: bmtc_vehicles_held
+        data_tests:
+          - not_null
+
+      - name: bmtc_schedules_operated
+        data_tests:
+          - not_null
+
+      - name: registered_vehicles_per_bmtc_schedule
+        data_tests:
+          - not_null
+
+      - name: motorisation_supply_pressure_index
+        data_tests:
+          - not_null
+
+  - name: mart_report_findings
+    description: >
+      Versioned catalogue of validated report statements, supporting
+      metrics, source models and interpretation limitations.
+
+    columns:
+      - name: finding_order
+        data_tests:
+          - not_null
+          - unique
+
+      - name: finding_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: dashboard_page_number
+        data_tests:
+          - not_null
+
+      - name: dashboard_page
+        data_tests:
+          - not_null
+
+      - name: finding_title
+        data_tests:
+          - not_null
+
+      - name: finding_statement
+        data_tests:
+          - not_null
+
+      - name: primary_metric_value
+        data_tests:
+          - not_null
+
+      - name: reporting_period
+        data_tests:
+          - not_null
+
+      - name: source_model
+        data_tests:
+          - not_null
+
+      - name: limitation_note
+        data_tests:
+          - not_null
+
+      - name: finding_snapshot_date
+        data_tests:
+          - not_null

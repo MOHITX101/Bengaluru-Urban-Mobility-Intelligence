@@ -1,0 +1,20 @@
+
+target/
+dbt_packages/
+logs/
+.env
+
+# Secrets
+.env
+**/.env
+
+# Python environments
+.venv/
+.rag_venv/
+__pycache__/
+*.pyc
+
+# Generated RAG data
+llm_app/data/*.json
+llm_app/data/*.npy
+llm_app/data/*.pkl

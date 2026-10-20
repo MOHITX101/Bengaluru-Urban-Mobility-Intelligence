@@ -1,0 +1,59 @@
+# Project identity
+name: "bangalore_dbt"
+version: "1.0.0"
+config-version: 2
+
+# The profile name must match the profile in profiles.yml
+profile: "bangalore_dbt"
+
+
+# Project directories
+model-paths:
+  - "models"
+
+analysis-paths:
+  - "analyses"
+
+test-paths:
+  - "tests"
+
+seed-paths:
+  - "seeds"
+
+macro-paths:
+  - "macros"
+
+snapshot-paths:
+  - "snapshots"
+
+
+# Folders deleted when dbt clean is executed
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+
+# Model configurations
+models:
+  bangalore_dbt:
+
+    staging:
+      +materialized: view
+      +schema: staging
+
+    marts:
+      +materialized: table
+      +schema: marts
+
+
+# Seed configurations
+seeds:
+  bangalore_dbt:
+    +schema: seeds
+
+
+# Snapshot configurations
+# This section can remain even if snapshots are added later.
+snapshots:
+  bangalore_dbt:
+    +schema: snapshots

@@ -1,0 +1,257 @@
+version: 2
+
+models:
+  - name: mart_traffic_weather
+    description: >
+      Analysis-ready daily traffic and weather dataset. Its grain is one
+      observation per traffic date, Bengaluru area and road.
+
+    columns:
+      - name: traffic_record_id
+        description: Unique identifier inherited from the traffic staging model.
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('stg_traffic')
+                field: traffic_record_id
+
+      - name: traffic_date
+        description: Date of the traffic and weather observation.
+        data_tests:
+          - not_null
+
+      - name: area_name
+        description: Bengaluru traffic area.
+        data_tests:
+          - not_null
+
+      - name: road_name
+        description: Road or intersection name.
+        data_tests:
+          - not_null
+
+      - name: weather_date
+        description: Matching date from the daily weather model.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_daily_weather')
+                field: weather_date
+
+      - name: weather_match_status
+        description: Indicates whether traffic received a matching weather record.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - MATCHED
+  
+
+  
+
+  - name: mart_bmtc_yearly_performance
+    description: >
+      Annual BMTC operational, fleet, passenger, reliability, safety and
+      financial indicators, with one row per financial year.
+
+    columns:
+      - name: bmtc_financial_year_id
+        description: Unique identifier for each BMTC financial year.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: fiscal_year
+        description: BMTC reporting financial year.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: fiscal_year_start
+        description: Calendar year in which the financial year begins.
+        data_tests:
+          - not_null
+
+      - name: fiscal_year_end
+        description: Calendar year in which the financial year ends.
+        data_tests:
+          - not_null
+
+      - name: fiscal_year_start_date
+        description: First date of the BMTC financial year.
+
+      - name: fiscal_year_end_date
+        description: Last date of the BMTC financial year.
+
+      - name: depots
+        description: Number of BMTC depots.
+        data_tests:
+          - not_null
+
+      - name: schedules_operated
+        description: Number of schedules operated by BMTC.
+        data_tests:
+          - not_null
+
+      - name: vehicles_held
+        description: Total number of vehicles held by BMTC.
+        data_tests:
+          - not_null
+
+      - name: total_service_km_lakh
+        description: Total service distance in lakh kilometres.
+        data_tests:
+          - not_null
+
+      - name: effective_km_per_day_lakh
+        description: Effective daily service distance in lakh kilometres.
+
+      - name: vehicle_utilisation_km
+        description: Average daily kilometres operated per vehicle.
+
+      - name: passengers_per_day_lakh
+        description: >
+          Average passengers carried per day in lakh passengers. Values
+          after 2020-21 are unavailable in the supplied source and remain null.
+
+      - name: passenger_load_factor_pct
+        description: Reported passenger load factor percentage.
+
+      - name: schedules_added
+        description: Number of schedules added during the financial year.
+
+      - name: schedules_curtailed
+        description: Number of schedules curtailed during the financial year.
+
+      - name: new_vehicles_added
+        description: >
+          Total new vehicles added, including components combined in source
+          values such as 565+30EV.
+
+      - name: explicitly_labelled_evs_added
+        description: >
+          New vehicles explicitly labelled as EVs in the source. A null
+          value does not necessarily mean that no EVs were added.
+
+      - name: other_vehicles_added
+        description: >
+          New vehicle additions not explicitly labelled as EVs in the
+          supplied source.
+
+      - name: explicitly_labelled_ev_share_pct
+        description: >
+          Explicitly labelled EV additions as a percentage of all reported
+          new vehicle additions.
+
+      - name: vehicles_scrapped
+        description: Total vehicles reported as scrapped.
+
+      - name: cancellation_pct
+        description: Percentage of scheduled services cancelled.
+
+      - name: fleet_utilization_pct
+        description: Percentage of the available fleet utilised.
+
+      - name: kmpl_hsd
+        description: Fuel efficiency in kilometres per litre of diesel.
+
+      - name: breakdowns
+        description: Number of vehicle breakdowns reported during the year.
+
+      - name: breakdowns_per_10000_km
+        description: Breakdown rate per 10,000 kilometres.
+
+      - name: bmtc_accidents
+        description: Annual number of accidents reported by BMTC.
+
+      - name: accidents_per_lakh_km
+        description: Accident rate per lakh service kilometres.
+
+      - name: staff_count
+        description: Reported BMTC staff position.
+
+      - name: schedules_per_vehicle
+        description: Number of operated schedules divided by vehicles held.
+
+      - name: staff_per_operated_schedule
+        description: Staff count divided by schedules operated.
+
+      - name: traffic_revenue_inr_lakh
+        description: Annual traffic revenue in INR lakh.
+
+      - name: government_support_inr_lakh
+        description: >
+          Government reimbursement or financial assistance in INR lakh.
+
+      - name: commercial_revenue_inr_lakh
+        description: Annual commercial revenue in INR lakh.
+
+      - name: non_traffic_revenue_inr_lakh
+        description: Total annual non-traffic revenue in INR lakh.
+
+      - name: gross_revenue_inr_lakh
+        description: Gross annual revenue in INR lakh.
+
+      - name: operating_cost_inr_lakh
+        description: Annual operating cost in INR lakh.
+
+      - name: traffic_revenue_margin_inr_lakh
+        description: Traffic-revenue margin in INR lakh.
+
+      - name: gross_revenue_margin_inr_lakh
+        description: Gross-revenue margin in INR lakh.
+
+      - name: traffic_revenue_cost_coverage_pct
+        description: Traffic revenue as a percentage of operating cost.
+
+      - name: gross_revenue_cost_coverage_pct
+        description: Gross revenue as a percentage of operating cost.
+
+      - name: gross_operating_margin_pct
+        description: Gross-revenue margin as a percentage of gross revenue.
+
+      - name: government_support_share_pct
+        description: Government financial support as a percentage of gross revenue.
+
+      - name: traffic_epkm_paise
+        description: Traffic earnings per kilometre in paise.
+
+      - name: gross_epkm_paise
+        description: Gross earnings per kilometre in paise.
+
+      - name: cpkm_paise
+        description: Cost per kilometre in paise.
+
+      - name: traffic_margin_per_km_paise
+        description: Traffic-revenue margin per kilometre in paise.
+
+      - name: gross_margin_per_km_paise
+        description: Gross-revenue margin per kilometre in paise.
+
+      - name: schedules_operated_yoy_pct
+        description: Year-over-year percentage change in schedules operated.
+
+      - name: total_service_km_yoy_pct
+        description: Year-over-year percentage change in service kilometres.
+
+      - name: bmtc_accidents_yoy_pct
+        description: Year-over-year percentage change in BMTC accidents.
+
+      - name: gross_revenue_yoy_pct
+        description: Year-over-year percentage change in gross revenue.
+
+      - name: operating_cost_yoy_pct
+        description: Year-over-year percentage change in operating cost.
+
+      - name: schedule_index_vs_2019_20
+        description: >
+          Schedules operated relative to FY 2019-20, where the baseline
+          financial year equals 100.
+
+      - name: service_km_index_vs_2019_20
+        description: >
+          Service kilometres relative to FY 2019-20, where the baseline
+          financial year equals 100.

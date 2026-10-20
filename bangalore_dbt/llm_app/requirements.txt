@@ -1,0 +1,6 @@
+google-genai
+python-dotenv
+snowflake-connector-python
+pandas
+numpy
+streamlit

@@ -1,0 +1,320 @@
+version: 2
+
+sources:
+  - name: raw_bangalore
+    description: Raw Bengaluru mobility data loaded from Amazon S3 into Snowflake.
+
+    database: BANGALORE
+    schema: RAW
+
+    tables:
+      - name: traffic
+        identifier: TRAFFIC
+        description: Daily road-level Bengaluru traffic observations from 2022 to 2024.
+
+      - name: daily_weather
+        identifier: DAILY_WEATHER
+        description: NASA POWER daily Bengaluru weather observations from 2016 to 2025.  
+
+      - name: air_quality
+        identifier: AIR_QUALITY
+        description: Fifteen-minute Bengaluru air-quality station observations from 2024 to 2025.
+
+      - name: metro_station_hourly_september
+        identifier: METRO_STATION_HOURLY_SEPTEMBER
+        description: Wide hourly metro station passenger counts for September 2025.
+
+      - name: accidents_2018_2020
+        identifier: ACCIDENTS_2018_2020
+        description: Station-wise Bengaluru accidents and casualties for 2018 to 2020.
+
+      - name: accidents_2021_2022
+        identifier: ACCIDENTS_2021_2022
+        description: Station-wise Bengaluru accidents and casualties for 2021 to 2022.
+
+      - name: traffic_cases_and_fines
+        identifier: TRAFFIC_CASES_AND_FINES
+        description: Annual Bengaluru traffic-enforcement cases and fines from 2011 to 2025.
+
+      - name: mv_act_offences
+        identifier: MV_ACT_OFFENCES
+        description: Motor Vehicles Act offence-category counts from 2018 to 2025.
+
+      - name: bmtc_operations
+        identifier: BMTC_OPERATIONS
+        description: >
+          BMTC annual operational, fleet, passenger, safety and financial
+          indicators covering financial years 2012-13 through 2025-26.
+
+
+
+      - name: vehicle_registrations_2022_rto
+        identifier: VEHICLE_REGISTRATIONS_2022_RTO
+        description: >
+          Bengaluru vehicle registrations for 2021-22 by vehicle type and
+          RTO jurisdiction, including detail, subtotal and grand-total rows.
+
+      - name: vehicle_registration_snapshots
+        identifier: VEHICLE_REGISTRATION_SNAPSHOTS
+        description: >
+          Bengaluru vehicle-registration snapshots covering later reporting
+          years, with opening totals, net additions and closing totals.
+
+      - name: ev_consumption
+        identifier: EV_CONSUMPTION
+        description: >
+          Annual LT and HT electric-vehicle charging stations, electricity
+          consumption and revenue indicators from 2020-21 to 2022-23.
+
+
+      - name: mobility_indicators_2011
+        identifier: MOBILITY_INDICATORS_2011
+        description: >
+          Historical 2011 Bengaluru zone-level population, density,
+          socioeconomic, mode-share and trip indicators.
+
+      - name: respiratory_deaths_2020
+        identifier: RESPIRATORY_DEATHS_2020
+        description: >
+          Aggregate 2020 medically certified respiratory-death statistics.
+          The supplied file contains no geographic field, so its geographic
+          scope must be treated as unverified.
+
+
+
+models:
+  - name: stg_traffic
+    description: Cleaned and standardized daily Bengaluru traffic data.
+
+    columns:
+      - name: traffic_record_id
+        description: Unique identifier created from date, area and road.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: traffic_date
+        description: Date of the traffic observation.
+        data_tests:
+          - not_null
+
+      - name: area_name
+        description: Bengaluru area associated with the traffic observation.
+        data_tests:
+          - not_null
+
+      - name: road_name
+        description: Road or intersection where traffic was observed.
+        data_tests:
+          - not_null
+
+      - name: traffic_volume
+        description: Recorded traffic volume.
+
+      - name: average_speed_kmph
+        description: Average traffic speed in kilometres per hour.
+
+      - name: travel_time_index
+        description: Relative travel-time burden compared with free-flow conditions.
+
+      - name: congestion_level
+        description: Reported congestion level.
+
+      - name: road_capacity_utilization
+        description: Reported road-capacity utilization.
+
+      - name: incident_reports
+        description: Number of reported traffic incidents.
+
+      - name: environmental_impact
+        description: Environmental-impact indicator supplied by the source.
+
+      - name: public_transport_usage
+        description: Public-transport usage indicator supplied by the source.
+
+      - name: traffic_signal_compliance
+        description: Traffic-signal compliance indicator.
+
+      - name: parking_usage
+        description: Parking-usage indicator.
+
+      - name: pedestrian_cyclist_count
+        description: Recorded pedestrian and cyclist count.
+
+      - name: weather_condition
+        description: Standardized weather-condition label.
+
+      - name: roadwork_activity
+        description: Roadwork or construction activity reported by the source.
+
+      - name: source_filename
+        description: S3 source filename.
+
+      - name: source_row_number
+        description: Row number within the source file.
+
+      - name: loaded_at
+        description: Timestamp when Snowflake loaded the row.
+
+  - name: stg_daily_weather
+    description: Cleaned NASA POWER daily Bengaluru weather data from 2016 to 2025.
+
+    columns:
+      - name: weather_record_id
+        description: Unique identifier for each daily weather observation.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: weather_date
+        description: Date of the weather observation.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: temperature_2m_c
+        description: Daily temperature measured at two metres in degrees Celsius.
+
+      - name: relative_humidity_2m_pct
+        description: Daily relative humidity measured at two metres.
+
+      - name: precipitation_mm
+        description: Daily precipitation in millimetres.
+
+      - name: wind_speed_2m
+        description: Daily wind speed measured at two metres.
+
+      - name: source_filename
+        description: S3 source filename.
+
+      - name: source_row_number
+        description: Row number within the source file.
+
+      - name: loaded_at
+        description: Timestamp when Snowflake loaded the row.
+
+  - name: stg_air_quality
+    description: >
+      Cleaned fifteen-minute Bengaluru air-quality observations with UTC
+      timestamps converted to Asia/Kolkata time.
+
+    columns:
+      - name: air_quality_observation_id
+        description: Unique identifier created from station ID and UTC timestamp.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: station_id
+        description: Source identifier for the monitoring station.
+        data_tests:
+          - not_null
+
+      - name: station_name
+        description: Full monitoring-station name.
+        data_tests:
+          - not_null
+
+      - name: observed_at_utc
+        description: Original observation timestamp represented in UTC.
+        data_tests:
+          - not_null
+
+      - name: observed_at_ist
+        description: Observation timestamp converted to Bengaluru local time.
+        data_tests:
+          - not_null
+
+      - name: pm25_ug_m3
+        description: PM2.5 concentration in micrograms per cubic metre.
+
+      - name: pm10_ug_m3
+        description: PM10 concentration in micrograms per cubic metre.
+
+      - name: no2_ug_m3
+        description: Nitrogen dioxide concentration in micrograms per cubic metre.
+
+      - name: co_mg_m3
+        description: Carbon monoxide concentration in milligrams per cubic metre.
+
+      - name: ozone_ug_m3
+        description: Ozone concentration in micrograms per cubic metre.
+
+
+  - name: stg_bmtc_operations
+    description: >
+      BMTC annual operational, passenger, fleet, safety and financial
+      indicators converted from a wide source into one row per parameter
+      and financial year.
+
+    columns:
+      - name: bmtc_parameter_year_id
+        description: Unique identifier for each BMTC parameter and financial year.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: parameter_name
+        description: Cleaned parameter name reported by BMTC.
+        data_tests:
+          - not_null
+
+      - name: parameter_key
+        description: Standardized machine-readable parameter identifier.
+        data_tests:
+          - not_null
+
+      - name: parameter_group
+        description: Analytical category such as operations, fleet, safety or financial.
+        data_tests:
+          - not_null
+
+      - name: fiscal_year
+        description: BMTC reporting financial year.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - "2012-13"
+                  - "2013-14"
+                  - "2014-15"
+                  - "2015-16"
+                  - "2016-17"
+                  - "2017-18"
+                  - "2018-19"
+                  - "2019-20"
+                  - "2020-21"
+                  - "2021-22"
+                  - "2022-23"
+                  - "2023-24"
+                  - "2024-25"
+                  - "2025-26"
+
+      - name: metric_value
+        description: >
+          Parsed numeric value. Composite expressions are added together,
+          while genuinely missing source values remain null.
+
+      - name: raw_value
+        description: Original source value retained for auditing.
+
+      - name: explicitly_labelled_ev_value
+        description: >
+          Electric-vehicle component when the original value explicitly
+          contains the EV label.
+
+      - name: is_missing_value
+        description: True when the source contains no value for the parameter-year.
+
+      - name: is_composite_value
+        description: True when the source value contains multiple numeric components.
+
+      - name: source_filename
+        description: S3 source filename.
+
+      - name: source_row_number
+        description: Original row number in the source file.
+
+      - name: loaded_at
+        description: Timestamp when Snowflake loaded the source row.
